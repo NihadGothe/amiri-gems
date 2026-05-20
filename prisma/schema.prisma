@@ -1,5 +1,3 @@
-// prisma/schema.prisma
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -24,36 +22,26 @@ model User {
   @@map("users")
 }
 
-enum Role {
-  SUPER_ADMIN
-  EDITOR
-}
-
 model Brand {
-  id               String         @id @default(cuid())
+  id               String    @id @default(cuid())
   name             String
-  slug             String         @unique
+  slug             String    @unique
   type             BrandType
-  shortDescription String?        @db.Text
-  fullDescription  String?        @db.LongText
+  shortDescription String?   @db.Text
+  fullDescription  String?   @db.LongText
   logo             String?
-  heroImages       Json?
-  galleryImages    Json?
-  status           Boolean        @default(true)
-  isDeleted        Boolean        @default(false)
-  sortOrder        Int            @default(0)
+  heroImages       String?   @db.LongText
+  galleryImages    String?   @db.LongText
+  status           Boolean   @default(true)
+  sortOrder        Int       @default(0)
   seoTitle         String?
   seoDescription   String?
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  isDeleted        Boolean   @default(false)
   products         Product[]
 
   @@map("brands")
-}
-
-enum BrandType {
-  JEWELLERY
-  WATCH
 }
 
 model Category {
@@ -63,38 +51,40 @@ model Category {
   description String?   @db.Text
   bannerImage String?
   status      Boolean   @default(true)
-  isDeleted   Boolean   @default(false)
   sortOrder   Int       @default(0)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  isDeleted   Boolean   @default(false)
   products    Product[]
 
   @@map("categories")
 }
 
 model Product {
-  id               String      @id @default(cuid())
+  id               String    @id @default(cuid())
   name             String
-  slug             String      @unique
+  slug             String    @unique
   brandId          String
   categoryId       String?
   type             BrandType
-  shortDescription String?     @db.Text
-  fullDescription  String?     @db.LongText
-  images           Json?
-  price            Decimal?    @db.Decimal(10, 2)
-  salePrice        Decimal?    @db.Decimal(10, 2)
-  sku              String?     @unique
-  stock            Int?        @default(0)
-  specifications   Json?
-  isFeatured       Boolean     @default(false)
-  isPublished      Boolean     @default(true)
-  isDeleted        Boolean     @default(false)
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
-  brand            Brand       @relation(fields: [brandId], references: [id], onDelete: Cascade)
-  category         Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  shortDescription String?   @db.Text
+  fullDescription  String?   @db.LongText
+  images           String?   @db.LongText
+  price            Decimal?  @db.Decimal(10, 2)
+  salePrice        Decimal?  @db.Decimal(10, 2)
+  sku              String?   @unique
+  stock            Int?      @default(0)
+  specifications   String?   @db.LongText
+  isFeatured       Boolean   @default(false)
+  isPublished      Boolean   @default(true)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  isDeleted        Boolean   @default(false)
+  brand            Brand     @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  category         Category? @relation(fields: [categoryId], references: [id])
 
+  @@index([brandId], map: "products_brandId_fkey")
+  @@index([categoryId], map: "products_categoryId_fkey")
   @@map("products")
 }
 
@@ -107,12 +97,12 @@ model Event {
   shortDescription String?  @db.Text
   fullDescription  String?  @db.LongText
   mainImage        String?
-  galleryImages    Json?
+  galleryImages    String?  @db.LongText
   isFeatured       Boolean  @default(false)
   isPublished      Boolean  @default(true)
-  isDeleted        Boolean  @default(false)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+  isDeleted        Boolean  @default(false)
 
   @@map("events")
 }
@@ -127,71 +117,54 @@ model Boutique {
   phone         String?
   email         String?
   whatsapp      String?
-  openingHours  Json?
+  openingHours  String?  @db.LongText
   latitude      Float?
   longitude     Float?
-  brands        Json?
-  services      Json?
-  galleryImages Json?
-  sortOrder     Int      @default(0)
+  brands        String?  @db.LongText
+  services      String?  @db.LongText
+  galleryImages String?  @db.LongText
   isPublished   Boolean  @default(true)
-  isDeleted     Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  isDeleted     Boolean  @default(false)
+  sortOrder     Int?     @default(0)
 
   @@map("boutiques")
 }
 
 model Slider {
-  id        String      @id @default(cuid())
+  id        String     @id @default(cuid())
   title     String?
   subtitle  String?
   image     String
   ctaText   String?
   ctaLink   String?
   placement SliderPage
-  sortOrder Int         @default(0)
-  isActive  Boolean     @default(true)
-  isDeleted Boolean     @default(false)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  sortOrder Int        @default(0)
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  isDeleted Boolean    @default(false)
 
   @@map("sliders")
 }
 
-enum SliderPage {
-  HOME
-  JEWELLERY
-  WATCHES
-  BRANDS
-  EVENTS
-  MEDIA
-}
-
 model Media {
-  id          String      @id @default(cuid())
+  id          String    @id @default(cuid())
   title       String
-  slug        String      @unique
+  slug        String    @unique
   type        MediaType
   image       String?
   videoUrl    String?
-  sourceUrl   String?
-  description String?     @db.Text
+  description String?   @db.Text
   date        DateTime?
-  isPublished Boolean     @default(true)
-  isDeleted   Boolean     @default(false)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  isPublished Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  isDeleted   Boolean   @default(false)
+  sourceUrl   String?   @db.VarChar(500)
 
   @@map("media")
-}
-
-enum MediaType {
-  NEWS
-  MAGAZINE
-  EXHIBITION
-  TV_COMMERCIAL
-  PRESS
 }
 
 model ContentBlock {
@@ -200,7 +173,7 @@ model ContentBlock {
   title     String?
   content   String?  @db.LongText
   image     String?
-  metadata  Json?
+  metadata  String?  @db.LongText
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -219,6 +192,33 @@ model ContactMessage {
   updatedAt DateTime      @updatedAt
 
   @@map("contact_messages")
+}
+
+enum Role {
+  SUPER_ADMIN
+  EDITOR
+}
+
+enum BrandType {
+  JEWELLERY
+  WATCH
+}
+
+enum SliderPage {
+  HOME
+  JEWELLERY
+  WATCHES
+  BRANDS
+  EVENTS
+  MEDIA
+}
+
+enum MediaType {
+  NEWS
+  MAGAZINE
+  EXHIBITION
+  TV_COMMERCIAL
+  PRESS
 }
 
 enum MessageStatus {
