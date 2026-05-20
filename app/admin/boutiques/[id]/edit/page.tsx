@@ -23,6 +23,7 @@ export default function EditBoutiquePage() {
           brands: typeof b.brands === 'object' ? JSON.stringify(b.brands) : (b.brands || '[]'),
           services: typeof b.services === 'object' ? JSON.stringify(b.services) : (b.services || '[]'),
           galleryImages: (() => { try { const g = b.galleryImages; return Array.isArray(g) ? g : JSON.parse(g || '[]') } catch { return [] } })(),
+          sortOrder: b.sortOrder ?? 0,
           isPublished: b.isPublished ?? true,
         })
       }).finally(() => setLoading(false))
