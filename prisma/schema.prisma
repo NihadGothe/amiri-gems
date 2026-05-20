@@ -1,0 +1,229 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  password      String?
+  role          Role      @default(EDITOR)
+  image         String?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("users")
+}
+
+enum Role {
+  SUPER_ADMIN
+  EDITOR
+}
+
+model Brand {
+  id               String         @id @default(cuid())
+  name             String
+  slug             String         @unique
+  type             BrandType
+  shortDescription String?        @db.Text
+  fullDescription  String?        @db.LongText
+  logo             String?
+  heroImages       Json?
+  galleryImages    Json?
+  status           Boolean        @default(true)
+  isDeleted        Boolean        @default(false)
+  sortOrder        Int            @default(0)
+  seoTitle         String?
+  seoDescription   String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  products         Product[]
+
+  @@map("brands")
+}
+
+enum BrandType {
+  JEWELLERY
+  WATCH
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?   @db.Text
+  bannerImage String?
+  status      Boolean   @default(true)
+  isDeleted   Boolean   @default(false)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id               String      @id @default(cuid())
+  name             String
+  slug             String      @unique
+  brandId          String
+  categoryId       String?
+  type             BrandType
+  shortDescription String?     @db.Text
+  fullDescription  String?     @db.LongText
+  images           Json?
+  price            Decimal?    @db.Decimal(10, 2)
+  salePrice        Decimal?    @db.Decimal(10, 2)
+  sku              String?     @unique
+  stock            Int?        @default(0)
+  specifications   Json?
+  isFeatured       Boolean     @default(false)
+  isPublished      Boolean     @default(true)
+  isDeleted        Boolean     @default(false)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  brand            Brand       @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  category         Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@map("products")
+}
+
+model Event {
+  id               String   @id @default(cuid())
+  title            String
+  slug             String   @unique
+  date             DateTime
+  location         String?
+  shortDescription String?  @db.Text
+  fullDescription  String?  @db.LongText
+  mainImage        String?
+  galleryImages    Json?
+  isFeatured       Boolean  @default(false)
+  isPublished      Boolean  @default(true)
+  isDeleted        Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("events")
+}
+
+model Boutique {
+  id            String   @id @default(cuid())
+  name          String
+  slug          String   @unique
+  city          String?
+  country       String?
+  address       String?  @db.Text
+  phone         String?
+  email         String?
+  whatsapp      String?
+  openingHours  Json?
+  latitude      Float?
+  longitude     Float?
+  brands        Json?
+  services      Json?
+  galleryImages Json?
+  sortOrder     Int      @default(0)
+  isPublished   Boolean  @default(true)
+  isDeleted     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("boutiques")
+}
+
+model Slider {
+  id        String      @id @default(cuid())
+  title     String?
+  subtitle  String?
+  image     String
+  ctaText   String?
+  ctaLink   String?
+  placement SliderPage
+  sortOrder Int         @default(0)
+  isActive  Boolean     @default(true)
+  isDeleted Boolean     @default(false)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@map("sliders")
+}
+
+enum SliderPage {
+  HOME
+  JEWELLERY
+  WATCHES
+  BRANDS
+  EVENTS
+  MEDIA
+}
+
+model Media {
+  id          String      @id @default(cuid())
+  title       String
+  slug        String      @unique
+  type        MediaType
+  image       String?
+  videoUrl    String?
+  sourceUrl   String?
+  description String?     @db.Text
+  date        DateTime?
+  isPublished Boolean     @default(true)
+  isDeleted   Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("media")
+}
+
+enum MediaType {
+  NEWS
+  MAGAZINE
+  EXHIBITION
+  TV_COMMERCIAL
+  PRESS
+}
+
+model ContentBlock {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  title     String?
+  content   String?  @db.LongText
+  image     String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("content_blocks")
+}
+
+model ContactMessage {
+  id        String        @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String?
+  message   String        @db.Text
+  status    MessageStatus @default(UNREAD)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("contact_messages")
+}
+
+enum MessageStatus {
+  UNREAD
+  READ
+  REPLIED
+  ARCHIVED
+}
