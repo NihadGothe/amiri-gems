@@ -29,3 +29,10 @@ npm-debug.log*
 /public/uploads/*
 !/public/uploads/.gitkeep
 
+public/images/sliders/
+public/images/jewellery/
+public/images/watches/
+public/images/events/
+public/images/founder/
+public/uploads/
+
