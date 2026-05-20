@@ -2,6 +2,8 @@
 import type { Metadata } from 'next'
 import prisma from '@/lib/prisma'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Heritage',
   description: 'Discover the story of Amiri Gems — a legacy of luxury jewellery and fine watches since 1994.',

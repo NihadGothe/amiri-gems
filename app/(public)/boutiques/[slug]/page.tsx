@@ -3,6 +3,8 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import prisma from '@/lib/prisma'
+
+export const dynamic = 'force-dynamic'
 import { MapPin, Phone, Mail, Clock, Navigation, MessageCircle, ArrowLeft } from 'lucide-react'
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {

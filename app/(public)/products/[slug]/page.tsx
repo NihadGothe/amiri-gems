@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import prisma from '@/lib/prisma'
+
+export const dynamic = 'force-dynamic'
 import { parseJsonField } from '@/lib/utils'
 
 export default async function ProductDetailPage({ params }: { params: { slug: string } }) {

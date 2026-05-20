@@ -1,5 +1,7 @@
 // app/admin/page.tsx
 import prisma from '@/lib/prisma'
+
+export const dynamic = 'force-dynamic'
 import Link from 'next/link'
 import {
   Gem, Package, CalendarDays, MapPin, MessageSquare,

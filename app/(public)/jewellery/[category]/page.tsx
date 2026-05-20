@@ -2,6 +2,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import prisma from '@/lib/prisma'
+
+export const dynamic = 'force-dynamic'
 import { notFound } from 'next/navigation'
 
 export async function generateMetadata({ params }: { params: { category: string } }): Promise<Metadata> {

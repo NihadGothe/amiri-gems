@@ -2,6 +2,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import prisma from '@/lib/prisma'
+
+export const dynamic = 'force-dynamic'
 import JewelleryHeroSlider from '@/components/public/JewelleryHeroSlider'
 
 export const metadata: Metadata = {

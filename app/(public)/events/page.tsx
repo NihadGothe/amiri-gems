@@ -2,6 +2,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import prisma from '@/lib/prisma'
+
+export const dynamic = 'force-dynamic'
 import { formatDate } from '@/lib/utils'
 import { MapPin, Calendar } from 'lucide-react'
 import JewelleryHeroSlider from '@/components/public/JewelleryHeroSlider'
