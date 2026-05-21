@@ -17,7 +17,7 @@ function cleanBoutique(data: any) {
     ...rest,
     latitude:      rest.latitude  ? parseFloat(rest.latitude)  : null,
     longitude:     rest.longitude ? parseFloat(rest.longitude) : null,
-    openingHours:  safeJson(rest.openingHours),
+    openingHours: rest.openingHours ? (typeof rest.openingHours === 'string' ? rest.openingHours : JSON.stringify(rest.openingHours)) : null,
     brands:        safeJson(rest.brands),
     services:      safeJson(rest.services),
     galleryImages: Array.isArray(rest.galleryImages) ? JSON.stringify(rest.galleryImages) : rest.galleryImages || null,
