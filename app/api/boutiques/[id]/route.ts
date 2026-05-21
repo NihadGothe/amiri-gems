@@ -13,22 +13,29 @@ function safeJson(v: any): any {
 
 function cleanBoutique(data: any) {
   const { id, createdAt, updatedAt, ...rest } = data
+  const toJsonString = (v: any) => {
+    if (!v) return null
+    if (typeof v === 'string') return v
+    return JSON.stringify(v)
+  }
   return {
     ...rest,
-    latitude:     rest.latitude  ? parseFloat(rest.latitude)  : null,
-    longitude:    rest.longitude ? parseFloat(rest.longitude) : null,
-    openingHours: rest.openingHours ? (typeof rest.openingHours === 'string' ? rest.openingHours : JSON.stringify(rest.openingHours)) : null,
-    brands:       safeJson(rest.brands),
-    services:     safeJson(rest.services),
-    galleryImages: Array.isArray(rest.galleryImages) ? JSON.stringify(rest.galleryImages) : rest.galleryImages || null,
-    email:        rest.email    || null,
-    whatsapp:     rest.whatsapp || null,
-    phone:        rest.phone    || null,
-    city:         rest.city     || null,
-    country:      rest.country  || null,
-    address:      rest.address  || null,
+    latitude:      rest.latitude  ? parseFloat(rest.latitude)  : null,
+    longitude:     rest.longitude ? parseFloat(rest.longitude) : null,
+    openingHours:  toJsonString(rest.openingHours),
+    brands:        toJsonString(rest.brands),
+    services:      toJsonString(rest.services),
+    galleryImages: toJsonString(rest.galleryImages),
+    sortOrder:     typeof rest.sortOrder === 'number' ? rest.sortOrder : 0,
+    email:         rest.email    || null,
+    whatsapp:      rest.whatsapp || null,
+    phone:         rest.phone    || null,
+    city:          rest.city     || null,
+    country:       rest.country  || null,
+    address:       rest.address  || null,
   }
 }
+
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
