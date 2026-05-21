@@ -34,7 +34,8 @@ export async function POST(req: NextRequest) {
     const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg'
     const filename = `${uuidv4()}.${ext}`
 
-    const uploadDir = path.join(process.cwd(), 'public', folder)
+    // Always save to /uploads/ folder regardless of folder parameter
+    const uploadDir = path.join(process.cwd(), 'public', 'uploads')
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true })
     }
@@ -43,7 +44,7 @@ export async function POST(req: NextRequest) {
     const filePath = path.join(uploadDir, filename)
     fs.writeFileSync(filePath, buffer)
 
-    const publicUrl = `/${folder}/${filename}`
+    const publicUrl = `/uploads/${filename}`
 
     return NextResponse.json({ url: publicUrl, filename })
   } catch (error) {
